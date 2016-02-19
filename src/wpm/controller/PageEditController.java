@@ -1,6 +1,7 @@
 package wpm.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.web.WebEngine;
@@ -114,8 +115,18 @@ public class PageEditController {
 	    HTMLTagPrototype newTag = element.clone();
 	    TreeItem newNode = new TreeItem(newTag);
 
-	    // ADD THE NEW NODE
-	    selectedItem.getChildren().add(newNode);
+	    // CHECK IF THE NEW TAG IS BEING ADDED TO A LEGAL PARENT 
+            ArrayList<String> legals = newTag.getLegalParents();
+            boolean isLegal = false;
+            for(int i = 0; i < legals.size(); i++) {
+                if(legals.get(i).equals(selectedTag.getTagName())) {
+                     isLegal = true;
+                }
+            }
+            // ADD THE NEW NODE IF SO
+            if(isLegal){
+	        selectedItem.getChildren().add(newNode);
+            }
 
 	    // SELECT THE NEW NODE
 	    tree.getSelectionModel().select(newNode);
