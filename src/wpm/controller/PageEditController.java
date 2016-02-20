@@ -123,14 +123,16 @@ public class PageEditController {
                      isLegal = true;
                 }
             }
-            // ADD THE NEW NODE IF SO
+            // IF THE SELECTED NODE IS ITS LEGAL PARENT
             if(isLegal){
+                // ADD THE NEW NODE
 	        selectedItem.getChildren().add(newNode);
-            }
+            
 
-	    // SELECT THE NEW NODE
-	    tree.getSelectionModel().select(newNode);
-	    selectedItem.setExpanded(true);
+                 // SELECT THE NEW NODE
+                 tree.getSelectionModel().select(newNode);
+                 selectedItem.setExpanded(true);
+            }
 
 	    // FORCE A RELOAD OF TAG EDITOR
 	    workspace.reloadWorkspace();
