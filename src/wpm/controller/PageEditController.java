@@ -148,6 +148,37 @@ public class PageEditController {
 	}
     }
 
+     /**
+     * This function responds to when the user tries to remove an element to the
+     * tree being edited.
+     */
+    public void handleRemoveElementRequest() {
+	if (enabled) {
+	    Workspace workspace = (Workspace) app.getWorkspaceComponent();
+
+	    // GET THE TREE TO SEE WHICH NODE IS CURRENTLY SELECTED
+	    TreeView tree = workspace.getHTMLTree();
+	    TreeItem selectedItem = (TreeItem) tree.getSelectionModel().getSelectedItem();
+	    HTMLTagPrototype selectedTag = (HTMLTagPrototype) selectedItem.getValue();
+            
+            // DELETE THAT NODE
+            selectedItem.getParent().getChildren().remove(selectedItem);
+
+	    // FORCE A RELOAD OF TAG EDITOR
+	    workspace.reloadWorkspace();
+
+	    try {
+		FileManager fileManager = (FileManager) app.getFileComponent();
+		fileManager.exportData(app.getDataComponent(), TEMP_PAGE);
+	    } catch (IOException ioe) {
+		// AN ERROR HAPPENED WRITING TO THE TEMP FILE, NOTIFY THE USER
+		PropertiesManager props = PropertiesManager.getPropertiesManager();
+		AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+		dialog.show(props.getProperty(ADD_ELEMENT_ERROR_TITLE), props.getProperty(ADD_ELEMENT_ERROR_MESSAGE));
+	    }
+	}
+    }
+    
     /**
      * This function provides a response to when the user changes the CSS
      * content. It responds but updating the data manager with the new CSS text,

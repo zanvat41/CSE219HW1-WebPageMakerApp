@@ -160,6 +160,19 @@ public class Workspace extends AppWorkspaceComponent {
 	dataManager.setHTMLRoot(htmlRoot);
 	dataManager.reset();
 
+        // MAKE THE REMOVE BUTTON
+	Button removeButton = new Button("X");
+	tagButtons.add(removeButton);
+	removeButton.setMaxWidth(BUTTON_TAG_WIDTH);
+	removeButton.setMinWidth(BUTTON_TAG_WIDTH);
+	removeButton.setPrefWidth(BUTTON_TAG_WIDTH);
+	tagToolbar.getChildren().add(removeButton);
+
+	// INIT ITS EVENT HANDLER
+        removeButton.setOnAction(e -> {
+            pageEditController.handleRemoveElementRequest();
+        });
+        
 	// AND NOW USE THE LOADED TAG TYPES TO ADD BUTTONS
 	for (HTMLTagPrototype tag : dataManager.getTags()) {
 	    // MAKE THE BUTTON
