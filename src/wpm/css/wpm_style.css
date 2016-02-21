@@ -71,3 +71,11 @@
 .prompt_text_field {
     -fx-font-size: 13pt;
 }
+
+// CSS CLASS FOR TAG TOOL BAR
+.bordered_pane {
+    -fx-background-color: #ccccff;
+    -fx-border-color: #111155;
+    -fx-border-width: 2px;
+    -fx-padding: 10 20 10 20;
+}

@@ -360,6 +360,9 @@ public class Workspace extends AppWorkspaceComponent {
 	    FileManager fileManager = (FileManager) app.getFileComponent();
 	    fileManager.exportData(dataManager, TEMP_PAGE);
 
+            // LOAD THE TEMPORARY PAGE
+            loadTempPage();
+            
 	    // WE DON'T WANT TO RESPOND TO EVENTS FORCED BY
 	    // OUR INITIALIZATION SELECTIONS
 	    pageEditController.enable(true);

@@ -64,6 +64,10 @@ public class FileManager implements AppFileComponent {
     public static final String TEMP_PAGE = PATH_TEMP + INDEX_FILE;
     public static final String PATH_IMAGE = "./temp/images/";
     
+    // THIS BOOLEAN VARIABLE RECORDS IF ./temp/css/ AND ./temp/images/
+    // ARE CREATED OR NOT
+    private boolean Folder_Created = false;
+    
     /**
      * This method is for saving user work, which in the case of this
      * application means the data that constitutes the page DOM.
@@ -222,10 +226,13 @@ public class FileManager implements AppFileComponent {
         saveData(data, filePath);
 	DataManager dataCopy = (DataManager) data;
         String cssContent = dataCopy.getCSSText();
-        File cssFolder = new File(PATH_CSS);
-        cssFolder.mkdir();
-        File imageFolder = new File(PATH_IMAGE);
-        imageFolder.mkdir();
+        if(!Folder_Created) {
+            File cssFolder = new File(PATH_CSS);
+            cssFolder.mkdir();
+            File imageFolder = new File(PATH_IMAGE);
+            imageFolder.mkdir();
+            Folder_Created = true;
+        }
         exportCSS(cssContent, TEMP_CSS_PATH);
     }
     
