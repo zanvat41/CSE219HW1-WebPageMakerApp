@@ -35,7 +35,7 @@ import static wpm.file.FileManager.JSON_TAG_NAME;
  * providing all I/O services.
  *
  * @author Richard McKenna
- * @author ?
+ * @author Zhe Lin
  * @version 1.0
  */
 public class FileManager implements AppFileComponent {
