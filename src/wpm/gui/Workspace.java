@@ -59,6 +59,7 @@ public class Workspace extends AppWorkspaceComponent {
     // THIS Workspace'S COMPONENTS TO A STYLE SHEET THAT IT USES
     static final String CLASS_MAX_PANE = "max_pane";
     static final String CLASS_TAG_BUTTON = "tag_button";
+    static final String CLASS_X_BUTTON = "x_button";
     static final String EMPTY_TEXT = "";
     static final int BUTTON_TAG_WIDTH = 75;
 
@@ -78,6 +79,7 @@ public class Workspace extends AppWorkspaceComponent {
     BorderPane leftPane;
     Pane tagToolbar;
     ScrollPane tagToolbarScrollPane;
+    Button removeButton;
     ArrayList<Button> tagButtons;
     HashMap<String, HTMLTagPrototype> tags;
 
@@ -161,8 +163,7 @@ public class Workspace extends AppWorkspaceComponent {
 	dataManager.reset();
 
         // MAKE THE REMOVE BUTTON
-	Button removeButton = new Button("X");
-	tagButtons.add(removeButton);
+	removeButton = new Button("X");
 	removeButton.setMaxWidth(BUTTON_TAG_WIDTH);
 	removeButton.setMinWidth(BUTTON_TAG_WIDTH);
 	removeButton.setPrefWidth(BUTTON_TAG_WIDTH);
@@ -300,6 +301,7 @@ public class Workspace extends AppWorkspaceComponent {
 	// A STYLE CLASS SPECIFIED IN THIS APPLICATION'S
 	// CSS FILE
 	tagToolbar.getStyleClass().add(CLASS_BORDERED_PANE);
+        removeButton.getStyleClass().add(CLASS_X_BUTTON);
 	for (Button b : tagButtons) {
 	    b.getStyleClass().add(CLASS_TAG_BUTTON);
 	}

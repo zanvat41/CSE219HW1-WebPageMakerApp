@@ -1,5 +1,6 @@
 package wpm.file;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class FileManager implements AppFileComponent {
     public static final String TEMP_CSS_PATH = PATH_CSS + CSS_FILE;
     public static final String PATH_TEMP = "./temp/";
     public static final String TEMP_PAGE = PATH_TEMP + INDEX_FILE;
+    public static final String PATH_IMAGE = "./temp/images/";
     
     /**
      * This method is for saving user work, which in the case of this
@@ -216,7 +218,15 @@ public class FileManager implements AppFileComponent {
      */
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
-	System.out.println("THIS SHOULD EXPORT THE WEB PAGE TO THE temp DIRECTORY, INCLUDING THE CSS FILE");
+	// THIS SHOULD EXPORT THE WEB PAGE TO THE temp DIRECTORY, INCLUDING THE CSS FILE
+        saveData(data, filePath);
+	DataManager dataCopy = (DataManager) data;
+        String cssContent = dataCopy.getCSSText();
+        File cssFolder = new File(PATH_CSS);
+        cssFolder.mkdir();
+        File imageFolder = new File(PATH_IMAGE);
+        imageFolder.mkdir();
+        exportCSS(cssContent, TEMP_CSS_PATH);
     }
     
     /**
