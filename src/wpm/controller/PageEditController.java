@@ -16,6 +16,11 @@ import static wpm.PropertyType.CSS_EXPORT_ERROR_TITLE;
 import wpm.WebPageMaker;
 import wpm.data.DataManager;
 import wpm.data.HTMLTagPrototype;
+import static wpm.data.HTMLTagPrototype.TAG_BODY;
+import static wpm.data.HTMLTagPrototype.TAG_HEAD;
+import static wpm.data.HTMLTagPrototype.TAG_HTML;
+import static wpm.data.HTMLTagPrototype.TAG_LINK;
+import static wpm.data.HTMLTagPrototype.TAG_TITLE;
 import wpm.file.FileManager;
 import static wpm.file.FileManager.TEMP_CSS_PATH;
 import static wpm.file.FileManager.TEMP_PAGE;
@@ -161,8 +166,24 @@ public class PageEditController {
 	    TreeItem selectedItem = (TreeItem) tree.getSelectionModel().getSelectedItem();
 	    HTMLTagPrototype selectedTag = (HTMLTagPrototype) selectedItem.getValue();
             
-            // DELETE THAT NODE
-            selectedItem.getParent().getChildren().remove(selectedItem);
+            // CHECK IF THE SELECTED ITEM IS LEGAL TO BE DELETED
+            String name = selectedTag.getTagName();
+            boolean isLegal = true;
+            if(name.equals(TAG_HTML)) {
+                isLegal = false;
+            } else if(name.equals(TAG_HEAD)) {
+                isLegal = false;
+            } else if(name.equals(TAG_TITLE)) {
+                isLegal = false;
+            } else if(name.equals(TAG_LINK)) {
+                isLegal = false;
+            } else if(name.equals(TAG_BODY)) {
+                isLegal = false;
+            }
+            
+            // DELETE THAT NODE IF IT IS LEGAL TO
+            if(isLegal)
+                selectedItem.getParent().getChildren().remove(selectedItem);
 
 	    // FORCE A RELOAD OF TAG EDITOR
 	    workspace.reloadWorkspace();
