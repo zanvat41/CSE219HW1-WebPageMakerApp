@@ -223,9 +223,12 @@ public class FileManager implements AppFileComponent {
     @Override
     public void exportData(AppDataComponent data, String filePath) throws IOException {
 	// THIS SHOULD EXPORT THE WEB PAGE TO THE temp DIRECTORY, INCLUDING THE CSS FILE
-        saveData(data, filePath);
-	DataManager dataCopy = (DataManager) data;
-        String cssContent = dataCopy.getCSSText();
+        //saveData(data, filePath);
+	DataManager dataManager = (DataManager) data;
+        PrintWriter pw = new PrintWriter(filePath);
+        TreeItem root = dataManager.getHTMLRoot();
+        htmlWriter(root, pw, 0);
+        String cssContent = dataManager.getCSSText();
         if(!Folder_Created) {
             File cssFolder = new File(PATH_CSS);
             cssFolder.mkdir();
@@ -234,6 +237,7 @@ public class FileManager implements AppFileComponent {
             Folder_Created = true;
         }
         exportCSS(cssContent, TEMP_CSS_PATH);
+        pw.close();
     }
     
     /**
@@ -313,4 +317,58 @@ public class FileManager implements AppFileComponent {
 	out.print("");
 	out.close();
     }
+    
+    /**
+     * This function is a helper function to export the data
+     * to index.html
+     * 
+     * @param Node A Node in the html tree
+     * @param pw The PrintWriter to index.html
+     * @param depth The depth of a node in the tree
+     */
+    private void htmlWriter(TreeItem Node, PrintWriter pw, int depth) {
+        // Print the space
+        String tagSpace = "    ";
+        for (int i = 0; i < depth; i++) {
+            pw.print(tagSpace);
+        }
+        
+        // Print the tag and attributes
+        HTMLTagPrototype nodeData = (HTMLTagPrototype)Node.getValue();
+        if(nodeData.getTagName().equals("Text")) {
+            String text = nodeData.getAttribute("text");
+            pw.println(text);
+        }
+        else{
+            pw.print("<" + nodeData.getTagName());
+            Set<String> keys = nodeData.getAttributes().keySet();
+            if(!keys.isEmpty()) {
+                String attributes = "";
+                for(String key : keys) {
+                    String value = nodeData.getAttribute(key);
+                    if(!value.equals("")) {
+                        attributes += " " + key + "=\"" + value + "\"";
+                    }
+                    
+                }
+                pw.print(attributes);
+            }
+            pw.println(">");
+        
+            ObservableList<TreeItem> children = Node.getChildren();
+            for (TreeItem child : children) {
+                // AND NOW MAKE THE RECURSIVE CALL ON THE CHILDREN
+                htmlWriter(child, pw, depth + 1);
+            }
+        
+            // Print the closing tag
+            if (nodeData.hasClosingTag()) {
+                for (int i = 0; i < depth; i++) {
+                    pw.print(tagSpace);
+                }
+                pw.println("</" + nodeData.getTagName() + ">");
+            }
+        }
+    }
+
 }

@@ -361,6 +361,7 @@ public class Workspace extends AppWorkspaceComponent {
 	    fileManager.exportData(dataManager, TEMP_PAGE);
 
             // LOAD THE TEMPORARY PAGE
+            // fileManager.loadHTMLTags(dataManager, TEMP_PAGE);
             loadTempPage();
             
 	    // WE DON'T WANT TO RESPOND TO EVENTS FORCED BY
