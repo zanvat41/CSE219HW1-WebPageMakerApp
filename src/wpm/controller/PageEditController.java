@@ -7,6 +7,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.web.WebEngine;
 import properties_manager.PropertiesManager;
 import saf.ui.AppMessageDialogSingleton;
+import saf.ui.AppYesNoCancelDialogSingleton;
 import static wpm.PropertyType.ADD_ELEMENT_ERROR_MESSAGE;
 import static wpm.PropertyType.ADD_ELEMENT_ERROR_TITLE;
 import static wpm.PropertyType.ATTRIBUTE_UPDATE_ERROR_MESSAGE;
@@ -158,33 +159,43 @@ public class PageEditController {
      * tree being edited.
      */
     public void handleRemoveElementRequest() {
-	if (enabled) {
+	if (enabled) {          
 	    Workspace workspace = (Workspace) app.getWorkspaceComponent();
+            
+            // PROMPT THE USER TO VERIFY THE REMOVAL EDIT
+            AppYesNoCancelDialogSingleton yesNoDialog = AppYesNoCancelDialogSingleton.getSingleton();
+            yesNoDialog.show("Removal Action Verification", "Do you want to remove the selected tag?");
+            
+            // AND NOW GET THE USER'S SELECTION
+            String selection = yesNoDialog.getSelection();
 
 	    // GET THE TREE TO SEE WHICH NODE IS CURRENTLY SELECTED
 	    TreeView tree = workspace.getHTMLTree();
 	    TreeItem selectedItem = (TreeItem) tree.getSelectionModel().getSelectedItem();
 	    HTMLTagPrototype selectedTag = (HTMLTagPrototype) selectedItem.getValue();
             
-            // CHECK IF THE SELECTED ITEM IS LEGAL TO BE DELETED
-            String name = selectedTag.getTagName();
-            boolean isLegal = true;
-            if(name.equals(TAG_HTML)) {
-                isLegal = false;
-            } else if(name.equals(TAG_HEAD)) {
-                isLegal = false;
-            } else if(name.equals(TAG_TITLE)) {
-                isLegal = false;
-            } else if(name.equals(TAG_LINK)) {
-                isLegal = false;
-            } else if(name.equals(TAG_BODY)) {
-                isLegal = false;
+            // CHECK IF THE USER VERIFY THE EDIT
+            if (selection.equals(AppYesNoCancelDialogSingleton.YES)) {
+                // CHECK IF THE SELECTED ITEM IS LEGAL TO BE DELETED
+                String name = selectedTag.getTagName();
+                boolean isLegal = true;
+                if(name.equals(TAG_HTML)) {
+                    isLegal = false;
+                } else if(name.equals(TAG_HEAD)) {
+                    isLegal = false;
+                } else if(name.equals(TAG_TITLE)) {
+                    isLegal = false;
+                } else if(name.equals(TAG_LINK)) {
+                    isLegal = false;
+                } else if(name.equals(TAG_BODY)) {
+                    isLegal = false;
+                }
+            
+                // DELETE THAT NODE IF IT IS LEGAL TO
+                if(isLegal)
+                    selectedItem.getParent().getChildren().remove(selectedItem);
             }
             
-            // DELETE THAT NODE IF IT IS LEGAL TO
-            if(isLegal)
-                selectedItem.getParent().getChildren().remove(selectedItem);
-
 	    // FORCE A RELOAD OF TAG EDITOR
 	    workspace.reloadWorkspace();
 
