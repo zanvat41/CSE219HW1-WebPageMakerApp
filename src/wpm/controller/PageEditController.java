@@ -14,6 +14,12 @@ import static wpm.PropertyType.ATTRIBUTE_UPDATE_ERROR_MESSAGE;
 import static wpm.PropertyType.ATTRIBUTE_UPDATE_ERROR_TITLE;
 import static wpm.PropertyType.CSS_EXPORT_ERROR_MESSAGE;
 import static wpm.PropertyType.CSS_EXPORT_ERROR_TITLE;
+import static wpm.PropertyType.ILLEGAL_NODE_REMOVAL_ERROR_MESSAGE;
+import static wpm.PropertyType.ILLEGAL_NODE_REMOVAL_ERROR_TITLE;
+import static wpm.PropertyType.REMOVAL_VERIFICATION_MESSAGE;
+import static wpm.PropertyType.REMOVAL_VERIFICATION_TITLE;
+import static wpm.PropertyType.REMOVE_ELEMENT_ERROR_MESSAGE;
+import static wpm.PropertyType.REMOVE_ELEMENT_ERROR_TITLE;
 import wpm.WebPageMaker;
 import wpm.data.DataManager;
 import wpm.data.HTMLTagPrototype;
@@ -161,13 +167,7 @@ public class PageEditController {
     public void handleRemoveElementRequest() {
 	if (enabled) {          
 	    Workspace workspace = (Workspace) app.getWorkspaceComponent();
-            
-            // PROMPT THE USER TO VERIFY THE REMOVAL EDIT
-            AppYesNoCancelDialogSingleton yesNoDialog = AppYesNoCancelDialogSingleton.getSingleton();
-            yesNoDialog.show("Removal Action Verification", "Do you want to remove the selected tag?");
-            
-            // AND NOW GET THE USER'S SELECTION
-            String selection = yesNoDialog.getSelection();
+            PropertiesManager props = PropertiesManager.getPropertiesManager();
 
 	    // GET THE TREE TO SEE WHICH NODE IS CURRENTLY SELECTED
 	    TreeView tree = workspace.getHTMLTree();
@@ -175,25 +175,34 @@ public class PageEditController {
 	    HTMLTagPrototype selectedTag = (HTMLTagPrototype) selectedItem.getValue();
             
             // CHECK IF THE USER VERIFY THE EDIT
-            if (selection.equals(AppYesNoCancelDialogSingleton.YES)) {
-                // CHECK IF THE SELECTED ITEM IS LEGAL TO BE DELETED
-                String name = selectedTag.getTagName();
-                boolean isLegal = true;
-                if(name.equals(TAG_HTML)) {
-                    isLegal = false;
-                } else if(name.equals(TAG_HEAD)) {
-                    isLegal = false;
-                } else if(name.equals(TAG_TITLE)) {
-                    isLegal = false;
-                } else if(name.equals(TAG_LINK)) {
-                    isLegal = false;
-                } else if(name.equals(TAG_BODY)) {
-                    isLegal = false;
-                }
+            // CHECK IF THE SELECTED ITEM IS LEGAL TO BE DELETED
+            String name = selectedTag.getTagName();
+            boolean isLegal = true;
+            if(name.equals(TAG_HTML)) {
+                isLegal = false;
+            } else if(name.equals(TAG_HEAD)) {
+                isLegal = false;
+            } else if(name.equals(TAG_TITLE)) {
+                isLegal = false;
+            } else if(name.equals(TAG_LINK)) {
+                isLegal = false;
+            } else if(name.equals(TAG_BODY)) {
+                isLegal = false;
+            }
             
-                // DELETE THAT NODE IF IT IS LEGAL TO
-                if(isLegal)
+            // DELETE THAT NODE IF IT IS LEGAL TO
+            if(isLegal) {
+                // PROMPT THE USER TO VERIFY THE REMOVAL EDIT
+                AppYesNoCancelDialogSingleton yesNoDialog = AppYesNoCancelDialogSingleton.getSingleton();
+                yesNoDialog.show(props.getProperty(REMOVAL_VERIFICATION_TITLE), props.getProperty(REMOVAL_VERIFICATION_MESSAGE));
+                // AND NOW GET THE USER'S SELECTION
+                String selection = yesNoDialog.getSelection();
+                if (selection.equals(AppYesNoCancelDialogSingleton.YES)){
                     selectedItem.getParent().getChildren().remove(selectedItem);
+                }
+            } else {
+                AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                dialog.show(props.getProperty(ILLEGAL_NODE_REMOVAL_ERROR_TITLE), props.getProperty(ILLEGAL_NODE_REMOVAL_ERROR_MESSAGE));
             }
             
 	    // FORCE A RELOAD OF TAG EDITOR
@@ -204,9 +213,8 @@ public class PageEditController {
 		fileManager.exportData(app.getDataComponent(), TEMP_PAGE);
 	    } catch (IOException ioe) {
 		// AN ERROR HAPPENED WRITING TO THE TEMP FILE, NOTIFY THE USER
-		PropertiesManager props = PropertiesManager.getPropertiesManager();
 		AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
-		dialog.show(props.getProperty(ADD_ELEMENT_ERROR_TITLE), props.getProperty(ADD_ELEMENT_ERROR_MESSAGE));
+		dialog.show(props.getProperty(REMOVE_ELEMENT_ERROR_TITLE), props.getProperty(REMOVE_ELEMENT_ERROR_MESSAGE));
 	    }
 	}
     }
