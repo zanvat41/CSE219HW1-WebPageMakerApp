@@ -2,11 +2,15 @@ package wpm;
 
 import java.util.Locale;
 import static javafx.application.Application.launch;
+import properties_manager.PropertiesManager;
 import saf.components.AppComponentsBuilder;
 import saf.components.AppDataComponent;
 import saf.components.AppFileComponent;
 import saf.AppTemplate;
 import saf.components.AppWorkspaceComponent;
+import saf.ui.AppMessageDialogSingleton;
+import static wpm.PropertyType.UPDATE_ERROR_MESSAGE;
+import static wpm.PropertyType.UPDATE_ERROR_TITLE;
 import wpm.data.DataManager;
 import wpm.file.FileManager;
 import wpm.gui.Workspace;
@@ -20,7 +24,7 @@ import wpm.gui.Workspace;
  * JavaFX application.
  * 
  * @author Richard McKenna
- * @author ?
+ * @author Zhe Lin
  * @version 1.0
  */
 public class WebPageMaker extends AppTemplate {
@@ -47,7 +51,14 @@ public class WebPageMaker extends AppTemplate {
 	     */
 	    @Override
 	    public AppDataComponent buildDataComponent() throws Exception {
-		return new DataManager(WebPageMaker.this);
+                try{
+                    return new DataManager(WebPageMaker.this);
+                } catch(Exception e){
+                    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                    PropertiesManager props = PropertiesManager.getPropertiesManager();
+                    dialog.show(props.getProperty(UPDATE_ERROR_TITLE), props.getProperty(UPDATE_ERROR_MESSAGE));
+                    return null;
+                }
 	    }
 
 	    /**
@@ -61,7 +72,14 @@ public class WebPageMaker extends AppTemplate {
 	     */
 	    @Override
 	    public AppFileComponent buildFileComponent() throws Exception {
-		return new FileManager();
+		try{
+                    return new FileManager();
+                } catch(Exception e){
+                    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                    PropertiesManager props = PropertiesManager.getPropertiesManager();
+                    dialog.show(props.getProperty(UPDATE_ERROR_TITLE), props.getProperty(UPDATE_ERROR_MESSAGE));
+                    return null;
+                }
 	    }
 
 	    /**
@@ -75,7 +93,14 @@ public class WebPageMaker extends AppTemplate {
 	     */
 	    @Override
 	    public AppWorkspaceComponent buildWorkspaceComponent() throws Exception {
-		return new Workspace(WebPageMaker.this);
+		try{
+                    return new Workspace(WebPageMaker.this);
+                } catch(Exception e){
+                    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+                    PropertiesManager props = PropertiesManager.getPropertiesManager();
+                    dialog.show(props.getProperty(UPDATE_ERROR_TITLE), props.getProperty(UPDATE_ERROR_MESSAGE));
+                    return null;
+                }
 	    }
 	};
     }

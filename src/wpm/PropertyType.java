@@ -12,7 +12,7 @@ package wpm;
  * the application ran in.
  * 
  * @author Richard McKenna
- * @author ?
+ * @author Zhe Lin
  * @version 1.0
  */
 public enum PropertyType {

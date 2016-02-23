@@ -22,7 +22,7 @@ import wpm.gui.Workspace;
  * This class serves as the data management component for this application.
  *
  * @author Richard McKenna
- * @author ?
+ * @author Zhe Lin
  * @version 1.0
  */
 public class DataManager implements AppDataComponent {
