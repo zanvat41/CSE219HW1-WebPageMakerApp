@@ -10,6 +10,8 @@ import saf.ui.AppMessageDialogSingleton;
 import saf.ui.AppYesNoCancelDialogSingleton;
 import static wpm.PropertyType.ADD_ELEMENT_ERROR_MESSAGE;
 import static wpm.PropertyType.ADD_ELEMENT_ERROR_TITLE;
+import static wpm.PropertyType.ADD_ELEMENT_ILLEGAL_MESSAGE;
+import static wpm.PropertyType.ADD_ELEMENT_ILLEGAL_TITLE;
 import static wpm.PropertyType.ATTRIBUTE_UPDATE_ERROR_MESSAGE;
 import static wpm.PropertyType.ATTRIBUTE_UPDATE_ERROR_TITLE;
 import static wpm.PropertyType.CSS_EXPORT_ERROR_MESSAGE;
@@ -143,6 +145,10 @@ public class PageEditController {
                 // SELECT THE NEW NODE
                 tree.getSelectionModel().select(newNode);
                 selectedItem.setExpanded(true);
+            } else {
+                PropertiesManager props = PropertiesManager.getPropertiesManager();
+		AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
+		dialog.show(props.getProperty(ADD_ELEMENT_ILLEGAL_TITLE), props.getProperty(ADD_ELEMENT_ILLEGAL_MESSAGE));      
             }
 
 	    // FORCE A RELOAD OF TAG EDITOR

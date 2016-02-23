@@ -59,6 +59,7 @@ public class Workspace extends AppWorkspaceComponent {
     // THIS Workspace'S COMPONENTS TO A STYLE SHEET THAT IT USES
     static final String CLASS_MAX_PANE = "max_pane";
     static final String CLASS_TAG_BUTTON = "tag_button";
+    static final String CLASS_ILLEGAL_TAG_BUTTON = "illegal_tag_button";
     static final String CLASS_X_BUTTON = "x_button";
     static final String EMPTY_TEXT = "";
     static final int BUTTON_TAG_WIDTH = 75;
@@ -214,11 +215,13 @@ public class Workspace extends AppWorkspaceComponent {
 	Tab htmlTab = new Tab();
 	htmlTab.setText("HTML");
 	htmlTab.setContent(htmlView);
+        htmlTab.setClosable(false);
 
 	// NOW FOR THE CSS
 	Tab cssTab = new Tab();
 	cssTab.setText("CSS");
 	cssTab.setContent(cssEditor);
+        cssTab.setClosable(false);
 	rightPane.getTabs().add(htmlTab);
 	rightPane.getTabs().add(cssTab);
 
@@ -350,8 +353,31 @@ public class Workspace extends AppWorkspaceComponent {
 		    });
 		    row++;
 		}
-	    }
+                
+                DataManager dataManager = (DataManager) app.getDataComponent();
+                for (Button b : tagButtons) {
+                    boolean isLegal = false;
+                    // LOAD ALL THE HTML TAG TYPES
+                    String tagName = b.getText();
+                    HTMLTagPrototype bTag = dataManager.getTag(tagName);
+                    ArrayList<String> legalParents = bTag.getLegalParents();
+                    int size = legalParents.size();
+                    for(int i = 0; i < size; i++) {
+                        if(legalParents.get(i).equals(selectedTag.getTagName())) {
+                            isLegal = true;
+                        }
+                    }
+                    if(isLegal) {
+                        b.getStyleClass().clear();
+                        b.getStyleClass().add(CLASS_TAG_BUTTON);
+                    } else {
+                        b.getStyleClass().clear();
+                        b.getStyleClass().add(CLASS_ILLEGAL_TAG_BUTTON);
+                    }
 
+                }
+            }
+            
 	    // LOAD THE CSS
 	    DataManager dataManager = (DataManager) app.getDataComponent();
 	    cssEditor.setText(dataManager.getCSSText());
@@ -361,12 +387,13 @@ public class Workspace extends AppWorkspaceComponent {
 	    fileManager.exportData(dataManager, TEMP_PAGE);
 
             // LOAD THE TEMPORARY PAGE
-            // fileManager.loadHTMLTags(dataManager, TEMP_PAGE);
             loadTempPage();
             
 	    // WE DON'T WANT TO RESPOND TO EVENTS FORCED BY
 	    // OUR INITIALIZATION SELECTIONS
 	    pageEditController.enable(true);
+            
+            gui.updateToolbarControls(false);
 	} catch (Exception e) {
 	    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
 	    PropertiesManager props = PropertiesManager.getPropertiesManager();

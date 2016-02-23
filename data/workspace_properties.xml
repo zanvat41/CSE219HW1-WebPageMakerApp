@@ -10,9 +10,11 @@
 	<property name="ATTRIBUTE_UPDATE_ERROR_MESSAGE"	    value="WARNING: An error occured updating the element's attribute."></property>
 	<property name="ATTRIBUTE_UPDATE_ERROR_TITLE"	    value="Attribute Update Error"></property>
 	<property name="ADD_ELEMENT_ERROR_MESSAGE"	    value="WARNING: An error occured adding the element."></property>
-	<property name="ADD_ELEMENT_ERROR_TITLE"	    value="Remove Element Error"></property>
+	<property name="ADD_ELEMENT_ERROR_TITLE"	    value="Add Element Error"></property>
+        <property name="ADD_ELEMENT_ILLEGAL_MESSAGE"	    value="You cannot add this tag to the selected tag!"></property>
+	<property name="ADD_ELEMENT_ILLEGAL_TITLE"	    value="Add Illegal Element Error"></property>
         <property name="REMOVE_ELEMENT_ERROR_MESSAGE"	    value="WARNING: An error occured removing the element."></property>
-	<property name="REMOVE_ELEMENT_ERROR_TITLE"	    value="Add Element Error"></property>
+	<property name="REMOVE_ELEMENT_ERROR_TITLE"	    value="Remove Element Error"></property>
         <property name="REMOVAL_VERIFICATION_MESSAGE"	    value="Do you really want to remove the selected tag?"></property>
         <property name="REMOVAL_VERIFICATION_TITLE"	    value="Removal Verification"></property>
 	<property name="ILLEGAL_NODE_REMOVAL_ERROR_MESSAGE" value="WARNING: That element cannot be removed."></property>
