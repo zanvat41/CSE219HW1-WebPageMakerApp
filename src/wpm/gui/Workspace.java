@@ -61,7 +61,7 @@ import static wpm.file.FileManager.TEMP_PAGE;
  * the user interface controls for editing work.
  *
  * @author Richard McKenna
- * @author ?
+ * @author Zhe Lin
  * @version 1.0
  */
 public class Workspace extends AppWorkspaceComponent {
