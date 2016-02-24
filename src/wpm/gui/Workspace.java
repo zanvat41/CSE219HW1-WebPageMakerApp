@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import saf.ui.AppYesNoCancelDialogSingleton;
 import saf.ui.AppMessageDialogSingleton;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import saf.ui.AppGUI;
 import wpm.data.HTMLTagPrototype;
 import saf.AppTemplate;
 import saf.components.AppWorkspaceComponent;
+import saf.controller.AppFileController;
+import static saf.settings.AppStartupConstants.PATH_IMAGES;
 import wpm.PropertyType;
 import static wpm.PropertyType.TEMP_PAGE_LOAD_ERROR_MESSAGE;
 import static wpm.PropertyType.TEMP_PAGE_LOAD_ERROR_TITLE;
@@ -41,8 +44,16 @@ import static wpm.PropertyType.UPDATE_ERROR_TITLE;
 import wpm.WebPageMaker;
 import wpm.controller.PageEditController;
 import wpm.data.DataManager;
+import static wpm.data.HTMLTagPrototype.TAG_BODY;
+import static wpm.data.HTMLTagPrototype.TAG_HEAD;
 import static wpm.data.HTMLTagPrototype.TAG_HTML;
+import static wpm.data.HTMLTagPrototype.TAG_LINK;
+import static wpm.data.HTMLTagPrototype.TAG_TITLE;
 import wpm.file.FileManager;
+import static wpm.file.FileManager.PATH_CSS;
+import static wpm.file.FileManager.PATH_IMAGE;
+import static wpm.file.FileManager.PATH_TEMP;
+import static wpm.file.FileManager.TEMP_CSS_PATH;
 import static wpm.file.FileManager.TEMP_PAGE;
 
 /**
@@ -60,6 +71,7 @@ public class Workspace extends AppWorkspaceComponent {
     static final String CLASS_MAX_PANE = "max_pane";
     static final String CLASS_TAG_BUTTON = "tag_button";
     static final String CLASS_ILLEGAL_TAG_BUTTON = "illegal_tag_button";
+    static final String CLASS_ILLEGAL_X_BUTTON = "illegal_x_button";
     static final String CLASS_X_BUTTON = "x_button";
     static final String EMPTY_TEXT = "";
     static final int BUTTON_TAG_WIDTH = 75;
@@ -147,6 +159,17 @@ public class Workspace extends AppWorkspaceComponent {
 	// LOAD ALL THE HTML TAG TYPES
 	FileManager fileManager = (FileManager) app.getFileComponent();
 	DataManager dataManager = (DataManager) app.getDataComponent();
+        
+        // CLEAR THE JUNK FILES IN temp DIRECTORY
+        File pageFile = new File(TEMP_PAGE);
+        if(pageFile.exists()) {
+            fileManager.clearFile(TEMP_PAGE);
+        }
+        File cssFile = new File(TEMP_CSS_PATH);
+        if(cssFile.exists()) {
+            fileManager.clearFile(TEMP_CSS_PATH);
+        }
+        
 
 	// AND NOW MAKE THE TREE
 	htmlTree = new TreeView();
@@ -354,6 +377,7 @@ public class Workspace extends AppWorkspaceComponent {
 		    row++;
 		}
                 
+                // MAKE THE DISABLE BUTTONS GRAY
                 DataManager dataManager = (DataManager) app.getDataComponent();
                 for (Button b : tagButtons) {
                     boolean isLegal = false;
@@ -376,6 +400,28 @@ public class Workspace extends AppWorkspaceComponent {
                     }
 
                 }
+                
+                // DISABLE THE REMOVE BUTTON IF APPLICABLE
+                String name = selectedTag.getTagName();
+                boolean removeLegal = true;
+                if(name.equals(TAG_HTML)) {
+                    removeLegal = false;
+                } else if(name.equals(TAG_HEAD)) {
+                    removeLegal = false;
+                } else if(name.equals(TAG_TITLE)) {
+                    removeLegal = false;
+                } else if(name.equals(TAG_LINK)) {
+                    removeLegal = false;
+                } else if(name.equals(TAG_BODY)) {
+                    removeLegal = false;
+                }
+                if(!removeLegal) {
+                    removeButton.getStyleClass().clear();
+                    removeButton.getStyleClass().add(CLASS_ILLEGAL_X_BUTTON);
+                } else {
+                    removeButton.getStyleClass().clear();
+                    removeButton.getStyleClass().add(CLASS_X_BUTTON);
+                }
             }
             
 	    // LOAD THE CSS
@@ -391,9 +437,7 @@ public class Workspace extends AppWorkspaceComponent {
             
 	    // WE DON'T WANT TO RESPOND TO EVENTS FORCED BY
 	    // OUR INITIALIZATION SELECTIONS
-	    pageEditController.enable(true);
-            
-            gui.updateToolbarControls(false);
+	    pageEditController.enable(true);          
 	} catch (Exception e) {
 	    AppMessageDialogSingleton dialog = AppMessageDialogSingleton.getSingleton();
 	    PropertiesManager props = PropertiesManager.getPropertiesManager();

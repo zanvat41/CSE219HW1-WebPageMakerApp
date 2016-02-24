@@ -6,6 +6,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.web.WebEngine;
 import properties_manager.PropertiesManager;
+import saf.controller.AppFileController;
 import saf.ui.AppMessageDialogSingleton;
 import saf.ui.AppYesNoCancelDialogSingleton;
 import static wpm.PropertyType.ADD_ELEMENT_ERROR_MESSAGE;
@@ -91,6 +92,10 @@ public class PageEditController {
     public void handleAttributeUpdate(HTMLTagPrototype selectedTag, String attributeName, String attributeValue) {
 	if (enabled) {
 	    try {
+                // MARK THE FILE AS EDITED
+                AppFileController afc = new AppFileController(app);
+                afc.markAsEdited(app.getGUI());
+                
 		// FIRST UPDATE THE ELEMENT'S DATA
 		selectedTag.addAttribute(attributeName, attributeValue);
 
@@ -118,6 +123,10 @@ public class PageEditController {
      */
     public void handleAddElementRequest(HTMLTagPrototype element) {
 	if (enabled) {
+            // MARK THE FILE AS EDITED
+            AppFileController afc = new AppFileController(app);
+            afc.markAsEdited(app.getGUI());
+            
 	    Workspace workspace = (Workspace) app.getWorkspaceComponent();
 
 	    // GET THE TREE TO SEE WHICH NODE IS CURRENTLY SELECTED
@@ -171,7 +180,11 @@ public class PageEditController {
      * tree being edited.
      */
     public void handleRemoveElementRequest() {
-	if (enabled) {          
+	if (enabled) {     
+            // MARK THE FILE AS EDITED
+            AppFileController afc = new AppFileController(app);
+            afc.markAsEdited(app.getGUI());
+            
 	    Workspace workspace = (Workspace) app.getWorkspaceComponent();
             PropertiesManager props = PropertiesManager.getPropertiesManager();
 
@@ -236,6 +249,10 @@ public class PageEditController {
     public void handleCSSEditing(String cssContent) {
 	if (enabled) {
 	    try {
+                // MARK THE FILE AS EDITED
+                AppFileController afc = new AppFileController(app);
+                afc.markAsEdited(app.getGUI());
+                
 		// MAKE SURE THE DATA MANAGER GETS THE CSS TEXT
 		DataManager dataManager = (DataManager) app.getDataComponent();
 		dataManager.setCSSText(cssContent);
