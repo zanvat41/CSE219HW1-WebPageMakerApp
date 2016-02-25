@@ -47,6 +47,7 @@
     -fx-background-radius: 30;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #654b00;
+    -fx-verticle-align: middle;  
     -fx-font-weight: 900;
     -fx-font-size: 25px;
     -fx-font-family: Arial Black;

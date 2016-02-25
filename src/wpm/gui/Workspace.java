@@ -391,11 +391,11 @@ public class Workspace extends AppWorkspaceComponent {
                             isLegal = true;
                         }
                     }
+                    b.getStyleClass().removeAll(CLASS_TAG_BUTTON);
+                    b.getStyleClass().removeAll(CLASS_ILLEGAL_TAG_BUTTON);
                     if(isLegal) {
-                        b.getStyleClass().clear();
                         b.getStyleClass().add(CLASS_TAG_BUTTON);
                     } else {
-                        b.getStyleClass().clear();
                         b.getStyleClass().add(CLASS_ILLEGAL_TAG_BUTTON);
                     }
 
@@ -415,11 +415,11 @@ public class Workspace extends AppWorkspaceComponent {
                 } else if(name.equals(TAG_BODY)) {
                     removeLegal = false;
                 }
+                removeButton.getStyleClass().removeAll(CLASS_X_BUTTON);
+                removeButton.getStyleClass().removeAll(CLASS_ILLEGAL_X_BUTTON);
                 if(!removeLegal) {
-                    removeButton.getStyleClass().clear();
                     removeButton.getStyleClass().add(CLASS_ILLEGAL_X_BUTTON);
                 } else {
-                    removeButton.getStyleClass().clear();
                     removeButton.getStyleClass().add(CLASS_X_BUTTON);
                 }
             }
